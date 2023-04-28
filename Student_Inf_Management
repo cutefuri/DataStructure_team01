@@ -1,0 +1,123 @@
+#include <stdio.h>
+#include <json/json.h>
+//json 파일 경로(임시)
+#define FILE_PATH "./student.json"
+//학생부 객체
+typedef struct student{
+   char name[5];
+   int age;
+   char phone[14];
+   char parent_phone[14];
+   char class_time[30]; //강의 시간이 들어갈 곳
+}student_t;
+//학생부 등록 함수
+void add_student(){
+   jason_object *nameobj, *studentobj;
+   nameobj = json_object_new_object();
+   studentobj = json_object_new_object();
+   student_t student;
+   printf("학생 이름: ");
+   scanf("%s", (student.name));
+   printf("학생 나이: ");
+   scanf("%d", &(student.age));
+   printf("학생 전화번호: ");
+   scanf("%s", (student.phone));
+   printf("부모님 전화번호: ");
+   scanf("%s", (student.parent_phone));
+   
+   printf("학생 강의 시간: ");
+   scanf("%s", (student.class_time));
+   //학생 뒷번호(각 학생부 객체의 이름으로 지정하여 관리하기 편하게하기 위함)
+   char student_num[5];
+   for(int i=9;student.phone[i]!='\0';i++)
+      student_num[i-9]=student.phone[i];
+   //json에 학생부 object 추가
+   json_object_object_add(studentobj,"name",json_string(student.name));
+   json_object_object_add(studentobj,"age",json_integer(student.age));
+   json_object_object_add(studentobj,"phone",json_string(student.phone));
+   json_object_object_add(studentobj,"parent_phone",json_string(student.parent_phone));
+   json_object_object_add(studentobj,"class_time",json_string(student.class_time));
+   
+   //파일 열기(쓰기 모드)
+   FILE* fp;
+   fp=fopen(FILE_PATH, "w");
+   //json 파일에 학생 뒷번호를 이름으로 둔 학생부 객체 저장
+   json_object_object_add(nameobj,json_string(student_num),stduentobj);
+   //파일 닫기
+   fclose(fp);
+   printf("학생부 등록 완료 \n");
+}
+//학생부 삭제 함수
+void del_student(){
+   char student_num[5];
+   printf("삭제할 학생의 뒷 전화번호 (4자리): ");
+   scanf("%s", student_num);
+   
+   //파일 열기 (쓰기 모드로)
+   FILE* fp;
+   fp = fopen(FILE_PATH, "w");
+   //추후에 입력한 번호가 파일에 없으면 오류를 출력하는 기능 추가
+   json_object_put(json_string(student_num));      //삭제하고자 하는 학생 정보삭제
+   printf("뒷 자리 %s 인 학생의 정보가 삭제되었습니다. \n")
+}
+void mod_student(){
+   json_t *root, *modify_student;
+   //파일 읽기
+   root = json_load_file(FILE_PATH, 0 , NULL);
+   //수정할 학생 뒷 번호 입력
+   char student_num[5];
+   printf("수정할 학생의 뒷 전화번호(4자리): ");
+   scanf("%s", student_num);
+   
+   //추후에 입력한 번호가 파일에 없으면 오류 출력하는 기능 추가
+   modify_student = json_object_get(root, json_string(student_num));
+   student_t student;
+   
+   printf("학생 이름: ");
+   scanf("%s", (student.name));
+   printf("학생 나이: ");
+   scanf("%d", &(student.age));
+   printf("학생 전화번호: ");
+   scanf("%s", (student.phone));
+   printf("부모님 전화번호: ");
+   scanf("%s", (student.parent_phone));
+   
+   printf("학생 강의 시간: ");
+   scanf("%s", (student.class_time));
+   //파일 수정
+   json_object_set_new(modify_student, "name", json_string(student.name));
+   json_object_set_new(modify_student, "age", json_integer(student.age));
+   json_object_set_new(modify_student, "phone", json_string(student.phone));
+   json_object_set_new(modify_student, "parent_phone", json_string(student.parent_phone));
+   json_object_set_new(modify_student, "class_time", json_string(student.class_time));
+   json_dump_file(root, FILE_PATH, JSON_INDENT(2));
+   
+   printf("학생 정보가 수정되었습니다.\n");
+}
+int main(){
+   //사용할 기능의 번호 입력, 입력한 값에 따른 함수 사용
+   int choice;
+   do{
+      printf("1. 학생 정보 추가 \n");
+      printf("2. 학생 정보 제거 \n");
+      printf("3. 학생 정보 수정 \n");
+      printf("4. 나가기 \n");
+      printf("원하는 기능의 번호 입력: ");
+      scanf("%d", &choice);
+      switch (choice){
+         case 1:
+            add_student();
+            break;
+         case 2:
+            del_student();
+            break;
+         case 3:
+            mod_student();
+         case 4:
+            break;
+         default:
+            printf("Error: 다시 입력하십시오. \n");
+            break;            
+   } while (choise != 4);
+   return 0;
+}
