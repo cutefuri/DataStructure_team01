@@ -56,7 +56,7 @@ int del_student(const char *phone) {
         if (json_object_object_get(obj, phone)) {
             json_object_object_del(obj, phone);
             json_object_to_file(STUDENT_FILE, root);
-            printf("Object with key '%s' deleted successfully.\n", phone);
+            printf("'%s''s information deleted successfully.\n", phone);
             return 1;
         }
     }
