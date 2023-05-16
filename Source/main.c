@@ -88,44 +88,6 @@ int del_student(const char *phone) {
     return 1;
 }*/
 
-int del_student1(const char *phone){
-    FILE *file = fopen(STUDENT_FILE, "r");
-    if (!file) {
-        printf("Failed to open JSON file.\n");
-        return -1;
-    }
-
-    fseek(file, 0, SEEK_END);
-    long fileSize = ftell(file);
-    fseek(file, 0, SEEK_SET);
-    char *jsonData = (char *)malloc(fileSize + 1);
-    fread(jsonData, 1, fileSize, file);
-    fclose(file);
-
-    struct json_object *root = json_tokener_parse(jsonData);
-    free(jsonData);
-    if (!root) {
-        printf("Failed to parse JSON data.\n");
-        return -1;
-    }
-
-    json_object_object_del(root, phone);
-
-    file = fopen(STUDENT_FILE, "w");
-    if (!file) {
-        printf("Failed to open JSON file for writing.\n");
-        return -1;
-    }
-    fprintf(file, "%s", json_object_to_json_string(root));
-    fclose(file);
-
-    json_object_put(root);
-
-    printf("Object with key '%s' deleted successfully.\n", phone);
-
-    return 0;
-}
-
 int main(int arge, char *argv[]){
     int choice;
     while(1){
