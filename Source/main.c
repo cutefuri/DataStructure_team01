@@ -40,7 +40,32 @@ int add_student(char *name, size_t age, char *phone, char *parent_phone, char *c
     return 1;
 }
 
-int del_student(const char *phone){
+int del_student(const char *phone) {
+    json_object *root, *obj;
+    int i, length;
+
+    root = json_object_from_file(STUDENT_FILE);
+    if (!root) {
+        printf("Failed to parse JSON data.\n");
+        return -1;
+    }
+
+    length = json_object_array_length(root);
+    for (i = 0; i < length; i++) {
+        obj = json_object_array_get_idx(root, i);
+        if (json_object_object_get(obj, phone)) {
+            json_object_object_del(obj, phone);
+            json_object_to_file(STUDENT_FILE, root);
+            printf("Object with key '%s' deleted successfully.\n", phone);
+            return 1;
+        }
+    }
+
+    printf("The information you entered does not exist.\n");
+    return -1;
+}
+
+/*int del_student(const char *phone){
     json_object *root, *obj;
 
     root = json_object_from_file(STUDENT_FILE);
@@ -61,7 +86,7 @@ int del_student(const char *phone){
     json_object_to_file(STUDENT_FILE, root);
 
     return 1;
-}
+}*/
 
 int del_student1(const char *phone){
     FILE *file = fopen(STUDENT_FILE, "r");
