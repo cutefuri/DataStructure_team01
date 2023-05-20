@@ -88,6 +88,25 @@ int del_student(const char *phone) {
     return 1;
 }*/
 
+int mod_student(char *num, char *name, int age, char *phone, char *p, char *class){
+    json_object *root, *obj;
+    int i, length;
+
+    root = json_object_from_file(STUDENT_FILE);
+    for(i=0; i<length; i++){
+        obj = json_object_array_get_idx(root, i);
+        if(json_object_object_get(obj, num)){
+            json_object_object_del(obj, num);
+            add_student(name, age, phone, p, class);
+            json_object_to_file(STUDENT_FILE, root);
+            printf("Information modified successfully. \n");
+            return 1;
+        }
+    }
+    printf("The information you entered does not exist. \n");
+    return -1;
+}
+
 int main(int arge, char *argv[]){
     int choice;
     while(1){
