@@ -129,6 +129,7 @@ int main(int arge, char *argv[]){
             del_student("010-1234-1234");
             break;
         case 3:
+            mod_student("010-0000-0000", "TEST1", 19, "010-0987-0987", "010-7890-7890","class_C");
             break;
         case 4:
             return 0;
