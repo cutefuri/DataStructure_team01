@@ -15,7 +15,7 @@ int student_inf_managerment(){
     return 0;
 }
 
-int add_student(char *name, size_t age, char *phone, char *parent_phone, char *class_time){
+int add_student(char *name, int age, char *phone, char *parent_phone, char *class_time){
     json_object *obj, *student, *root;
 
     obj = json_object_new_object();
